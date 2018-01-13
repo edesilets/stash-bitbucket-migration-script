@@ -10,8 +10,8 @@ stash = stashy.connect("stash", username, password)
 
 projects = stash.projects.list()
 
-# /Users//Documents/python/stash/
-print '\n' + os.getcwd()
+# /Users//Documents/python/stash/delete
+starting_dir = os.getcwd() + '/' + 'delete/'
 
 # Projects
 for project in projects:
@@ -27,9 +27,10 @@ for project in projects:
     for repository in project_repositories:
         pprint.pprint('Project Name: ' + repository['name'])
         pprint.pprint('Git URL: ' + repository['links']['clone'][0]['href'])
-        # os.system("git clone %s" % url["href"])
-        path = project['name'] +'/'+ repository['name']
+        path = starting_dir + project['name'] +'/'+ repository['name']
         print path
-        # os.makedirs(directory)
-
+        os.makedirs(path)
+        os.chdir(path)
+        os.system("git clone %s" % repository['links']['clone'][0]['href'])
+        os.chdir(starting_dir)
         print '\n'
