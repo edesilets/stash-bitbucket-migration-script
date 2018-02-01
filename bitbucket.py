@@ -56,6 +56,14 @@ class BitBucket(BitBucketRequest):
         self.bitBucketRequest.clearPayload()
         return response
 
+    def createProjectRepository(self, projectKey, name, forkable=True):
+        self.bitBucketRequest.setPayload("name", name)
+        self.bitBucketRequest.setPayload("scmId", "git")
+        self.bitBucketRequest.setPayload("forkable", forkable)
+        response = self.bitBucketRequest.send("POST", "projects/"+projectKey+"/repos")
+        self.bitBucketRequest.clearPayload()
+        return response
+
 bb = BitBucket(host, username, password)
 response = bb.createProject('PRe', 'Testing Project3e', 'Just another testing')
 
