@@ -48,7 +48,7 @@ class BitBucket(BitBucketRequest):
     def __init__(self, host, username, password):
         self.bitBucketRequest = BitBucketRequest(host, username, password)
 
-    def createRepository(self, key, name, description):
+    def createProject(self, key, name, description):
         self.bitBucketRequest.setPayload("key", key)
         self.bitBucketRequest.setPayload("name", name)
         self.bitBucketRequest.setPayload("description", description)
@@ -57,5 +57,9 @@ class BitBucket(BitBucketRequest):
         return response
 
 bb = BitBucket(host, username, password)
-response = bb.createRepository('PRJ', 'Testing Project3', 'Just another testing')
-pprint.pprint(response)
+response = bb.createProject('PRe', 'Testing Project3e', 'Just another testing')
+
+if response.get("errors"):
+    print("Push error to dict\n");
+else:
+    print("moving on\n");
