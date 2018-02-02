@@ -92,7 +92,7 @@ class BitBucket(BitBucketRequest):
             properPermission = "REPO_ADMIN"
 
         uri            = "projects/"+projectKey+"/repos/"+repository+"/permissions/users"
-        queryParams    = "?permission="+userName+"&permission="+properPermission
+        queryParams    = "?name="+userName+"&permission="+properPermission
         fullyFormedURI = uri + queryParams
 
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)
