@@ -5,6 +5,8 @@ import pprint
 import requests
 import json
 import base64
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 username = ''
 password = ''
