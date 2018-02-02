@@ -43,9 +43,10 @@ class BitBucketRequest:
 
         # encode playload and headers and send request to server BB test....
         response = requests.request(method, self.baseurl+uri, data=encodedpayload, headers=self.headers, verify=False)
+        self.clearPayload()
 
         if response.ok:
-        decoded = json.loads(response.text)
+            decoded = json.loads(response.text)
         else:
             decoded = response.text
         return decoded
@@ -59,7 +60,6 @@ class BitBucket(BitBucketRequest):
         self.bitBucketRequest.setPayload("name", name)
         self.bitBucketRequest.setPayload("description", description)
         response = self.bitBucketRequest.send("POST", "projects")
-        self.bitBucketRequest.clearPayload()
         return response
 
     def createProjectRepository(self, projectKey, name, forkable=True):
@@ -67,7 +67,6 @@ class BitBucket(BitBucketRequest):
         self.bitBucketRequest.setPayload("scmId", "git")
         self.bitBucketRequest.setPayload("forkable", forkable)
         response = self.bitBucketRequest.send("POST", "projects/"+projectKey+"/repos")
-        self.bitBucketRequest.clearPayload()
         return response
 
     def setProjectGroupPermissions(self, projectKey, name, permission):
