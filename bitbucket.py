@@ -43,10 +43,11 @@ class BitBucketRequest:
 
         # encode playload and headers and send request to server BB test....
         response = requests.request(method, self.baseurl+uri, data=encodedpayload, headers=self.headers, verify=False)
-        if not response.text:
-            decoded = response.text
-        else:
+
+        if response.ok:
         decoded = json.loads(response.text)
+        else:
+            decoded = response.text
         return decoded
 
 class BitBucket(BitBucketRequest):
