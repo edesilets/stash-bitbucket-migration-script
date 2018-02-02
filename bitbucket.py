@@ -67,7 +67,7 @@ class BitBucket(BitBucketRequest):
         self.bitBucketRequest.clearPayload()
         return response
 
-    def setProjectPermissions(self, projectKey, name, permission):
+    def setProjectGroupPermissions(self, projectKey, name, permission):
         permission = permission.lower()
         if permission == "read":
             properPermission = "PROJECT_READ"
@@ -82,7 +82,7 @@ class BitBucket(BitBucketRequest):
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)
         return response
 
-    def setRepositoryPermissions(self, projectKey, repository, userName, permission):
+    def setRepositoryUserPermissions(self, projectKey, repository, userName, permission):
         permission = permission.lower()
         if permission == "read":
             properPermission = "REPO_READ"
