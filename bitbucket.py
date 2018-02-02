@@ -67,6 +67,21 @@ class BitBucket(BitBucketRequest):
         self.bitBucketRequest.clearPayload()
         return response
 
+    def setProjectPermissions(self, projectKey, name, permission):
+        permission = permission.lower()
+        if permission == "read":
+            properPermission = "PROJECT_READ"
+        elif permission == "write":
+            properPermission = "PROJECT_WRITE"
+        elif permission == "admin":
+            properPermission = "PROJECT_ADMIN"
+
+        uri            = "projects/"+projectKey+"/permissions/groups"
+        queryParams    = "?permission="+properPermission+"&name="+name
+        fullyFormedURI = uri + queryParams
+        response = self.bitBucketRequest.send("PUT", fullyFormedURI)
+        return response
+
 bb = BitBucket(host, username, password)
 response = bb.createProject('PRe', 'Testing Project3e', 'Just another testing')
 
