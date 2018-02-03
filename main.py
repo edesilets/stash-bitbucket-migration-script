@@ -1,11 +1,13 @@
+import os
 import bitbucket
 import settings
+import pprint
 
 bitbucket_username = os.environ.get("BITBUCKET_USERNAME")
 bitbucket_password = os.environ.get("BITBUCKET_PASSWORD")
-bitbucket_host     = os.environ.get("HOST_BITBUCKET")
+bitbucket_host     = os.environ.get("BITBUCKET_HOST")
 
-bb = BitBucket(bitbucketHost, username, password)
+bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 
 # print("Create Project AKA: Client \n")
 # response1 = bb.createProject('TEST', 'Testing Project3e', 'Just another testing')
