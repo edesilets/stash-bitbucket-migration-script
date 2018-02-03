@@ -10,7 +10,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 username = ''
 password = ''
-host     = 'host'
+host     = ''
 
 class BitBucketRequest:
     baseurl = ""
@@ -45,7 +45,7 @@ class BitBucketRequest:
         response = requests.request(method, self.baseurl+uri, data=encodedpayload, headers=self.headers, verify=False)
         self.clearPayload()
 
-        if response.ok:
+        if response.ok and response.text:
             decoded = json.loads(response.text)
         else:
             decoded = response.text
