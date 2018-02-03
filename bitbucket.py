@@ -11,7 +11,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 username = os.environ.get("USERNAME")
 password = os.environ.get("PASSWORD")
-host     = os.environ.get("HOST")
+host     = os.environ.get("HOST_BITBUCKET")
 
 class BitBucketRequest:
     baseurl = ""
