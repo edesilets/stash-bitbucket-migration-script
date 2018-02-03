@@ -1,15 +1,15 @@
 #!/usr/bin/python
 import sys
 import os
+import settings
 import stashy
 import pprint
-import settings
 
-username = os.environ.get("USERNAME")
-password = os.environ.get("PASSWORD")
-host     = os.environ.get("HOST_STASH")
+stash_username = os.environ.get("STASH_USERNAME")
+stash_password = os.environ.get("STASH_PASSWORD")
+stash_host     = os.environ.get("STASH_HOST")
 
-stash = stashy.connect(host, username, password)
+stash = stashy.connect(stash_host, stash_username, stash_password)
 
 projects = stash.projects.list()
 

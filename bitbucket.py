@@ -1,17 +1,12 @@
 #!/usr/bin/python
 import sys
 import os
-import pprint
 import requests
 import json
 import base64
-import settings
+import pprint
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-username = os.environ.get("USERNAME")
-password = os.environ.get("PASSWORD")
-host     = os.environ.get("HOST_BITBUCKET")
 
 class BitBucketRequest:
     baseurl = ""
@@ -100,42 +95,3 @@ class BitBucket(BitBucketRequest):
 
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)
         return response
-
-bb = BitBucket(host, username, password)
-
-# print("Create Project AKA: Client \n")
-# response1 = bb.createProject('TEST', 'Testing Project3e', 'Just another testing')
-# pprint.pprint(response1)
-# print("\n")
-
-# print("Create a repository in a project AKA: Client \n")
-# response2 = bb.createProjectRepository('TEST', 'site mover')
-# pprint.pprint("Slug shouldn't be NONE")
-# pprint.pprint(response2.get("slug"))
-# print("\n")
-
-repositorySlug = "site-mover"
-
-# print("Set Repository Permission: User \n")
-# response3 = bb.setRepositoryUserPermissions('TEST', repositorySlug, 'Ethan.Desilets', 'admin')
-# pprint.pprint(response3)
-# print("\n")
-
-print("Set Repository Permission: Group \n")
-response3a = bb.setRepositoryPermissions('TEST', repositorySlug, "group", 'Administrators', 'admin')
-pprint.pprint(response3a)
-print("\n")
-
-# print("response4 \n")
-# response4 = bb.setProjectGroupPermissions('TEST', 'administrators', 'admin')
-# pprint.pprint(response4)
-# print("\n")
-
-# print("git push origin --all")
-
-# if response.get("errors"):
-#     print("Push error to dict\n");
-# else:
-#     print("moving on\n");
-
-# 3:14 pm
