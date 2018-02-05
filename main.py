@@ -43,6 +43,7 @@ def saveRepositoriesLocally(repository, project):
         # os.chdir(starting_dir)
         print '\n'
 
+bb       = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 stash    = stash.Stash(stash_host, stash_username, stash_password)
 projects = stash.getProjects()
 
