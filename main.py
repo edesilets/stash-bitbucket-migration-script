@@ -27,8 +27,8 @@ def saveRepositoriesLocally(repository, project):
 stash    = stash.Stash(stash_host, stash_username, stash_password)
 projects = stash.getProjects()
 
-# /Users/userName/Documents/python/stash/delete
-starting_dir = os.getcwd() + '/' + 'delete/'
+# /Users/userName/Documents/python/stash/export
+starting_dir = os.getcwd() + '/' + 'export/'
 
 # Projects
 for project in projects:
