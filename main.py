@@ -18,6 +18,20 @@ def gitUrlParse(url, ssh_conf_name):
     modify = url.replace(urlParsed.netloc, ssh_conf_name)
     return modify
 
+def setupBitBucketProject(projectkey, projectName):
+    bb.createProject(projectkey, projectName, '')
+    bb.setProjectPermissions(projectkey, "group", "Administrators", 'admin')
+    bb.setProjectPermissions(projectkey, "user", "Ethan.Desilets", 'admin')
+
+def setupBitBucketRepository(projectKey, name):
+    repositoryInfo = bb.createProjectRepository(projectKey, name)
+    repositoryKey  = repositoryInfo['slug']
+    repositoryGitUrl = repositoryInfo['links']['clone'][0]['href']
+
+    bb.setRepositoryPermissions(projectKey, repositoryKey, "group", "Administrators", 'admin')
+    bb.setRepositoryPermissions(projectKey, repositoryKey, "user", "Ethan.Desilets", 'admin')
+    return repositoryGitUrl
+
 def saveRepositoriesLocally(repository, project):
         pprint.pprint('Project Name: ' + repository['name'])
         pprint.pprint('Git URL: ' + repository['links']['clone'][0]['href'])
