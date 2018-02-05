@@ -95,3 +95,19 @@ class BitBucket(BitBucketRequest):
 
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)
         return response
+
+    def setRepositoryGroupPermissions(self, projectKey, repository, userName, permission):
+        permission = permission.lower()
+        if permission == "read":
+            properPermission = "REPO_READ"
+        elif permission == "write":
+            properPermission = "REPO_WRITE"
+        elif permission == "admin":
+            properPermission = "REPO_ADMIN"
+
+        uri            = "projects/"+projectKey+"/repos/"+repository+"/permissions/groups"
+        queryParams    = "?name="+userName+"&permission="+properPermission
+        fullyFormedURI = uri + queryParams
+
+        response = self.bitBucketRequest.send("PUT", fullyFormedURI)
+        return response
