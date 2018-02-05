@@ -80,7 +80,13 @@ class BitBucket(BitBucketRequest):
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)
         return response
 
-    def setRepositoryUserPermissions(self, projectKey, repository, userName, permission):
+    def setRepositoryPermissions(self, projectKey, repository, user_or_group, name, permission):
+        user_or_group = user_or_group.lower()
+        if user_or_group == "group" or user_or_group == "groups":
+            properUserGroup = "groups"
+        elif user_or_group == "user" or user_or_group == "users":
+            properUserGroup = "users"
+
         permission = permission.lower()
         if permission == "read":
             properPermission = "REPO_READ"
@@ -89,24 +95,8 @@ class BitBucket(BitBucketRequest):
         elif permission == "admin":
             properPermission = "REPO_ADMIN"
 
-        uri            = "projects/"+projectKey+"/repos/"+repository+"/permissions/users"
-        queryParams    = "?name="+userName+"&permission="+properPermission
-        fullyFormedURI = uri + queryParams
-
-        response = self.bitBucketRequest.send("PUT", fullyFormedURI)
-        return response
-
-    def setRepositoryGroupPermissions(self, projectKey, repository, userName, permission):
-        permission = permission.lower()
-        if permission == "read":
-            properPermission = "REPO_READ"
-        elif permission == "write":
-            properPermission = "REPO_WRITE"
-        elif permission == "admin":
-            properPermission = "REPO_ADMIN"
-
-        uri            = "projects/"+projectKey+"/repos/"+repository+"/permissions/groups"
-        queryParams    = "?name="+userName+"&permission="+properPermission
+        uri            = "projects/"+projectKey+"/repos/"+repository+"/permissions/"+properUserGroup
+        queryParams    = "?name="+name+"&permission="+properPermission
         fullyFormedURI = uri + queryParams
 
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)

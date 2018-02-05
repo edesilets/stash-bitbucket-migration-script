@@ -27,15 +27,15 @@ bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 
 repositorySlug = "site-mover"
 
-# print("Set Repository Permission: User \n")
-# response3 = bb.setRepositoryUserPermissions('TEST', repositorySlug, 'Ethan.Desilets', 'admin')
-# pprint.pprint(response3)
-# print("\n")
+print("Set Repository Permission: User \n")
+response3 = bb.setRepositoryPermissions('TEST', repositorySlug, "users", 'Ethan.Desilets', 'admin')
+pprint.pprint(response3)
+print("\n")
 
-# print("Set Repository Permission: Group \n")
-# response3a = bb.setRepositoryGroupPermissions('TEST', repositorySlug, 'Administrators', 'admin')
-# pprint.pprint(response3a)
-# print("\n")
+print("Set Repository Permission: Group \n")
+response3a = bb.setRepositoryPermissions('TEST', repositorySlug, "groups", 'Administrators', 'admin')
+pprint.pprint(response3a)
+print("\n")
 
 # print("git push origin --all")
 
