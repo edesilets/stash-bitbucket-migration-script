@@ -52,8 +52,8 @@ starting_dir = os.getcwd() + '/' + 'export/'
 
 # Projects
 for project in projects:
-    pprint.pprint('Folder Name: ' + project['name'])
-    pprint.pprint('Project Key: ' + project['key'])
+    pprint.pprint('Stash Folder Name: ' + project['name'])
+    pprint.pprint('Stash Project Key: ' + project['key'])
     project_key = project['key']
 
     projectsRepos = stash.getProjectRepositories(project_key)
