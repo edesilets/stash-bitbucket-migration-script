@@ -3,6 +3,7 @@ import bitbucket
 import stash
 import settings
 import pprint
+from urlparse import urlparse
 
 bitbucket_username = os.environ.get("BITBUCKET_USERNAME")
 bitbucket_password = os.environ.get("BITBUCKET_PASSWORD")
@@ -12,6 +13,10 @@ stash_username = os.environ.get("STASH_USERNAME")
 stash_password = os.environ.get("STASH_PASSWORD")
 stash_host     = os.environ.get("STASH_HOST")
 
+def gitUrlParse(url, ssh_conf_name):
+    urlParsed = urlparse(url)
+    modify = url.replace(urlParsed.netloc, ssh_conf_name)
+    return modify
 
 def saveRepositoriesLocally(repository, project):
         pprint.pprint('Project Name: ' + repository['name'])
