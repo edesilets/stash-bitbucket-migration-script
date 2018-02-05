@@ -14,10 +14,15 @@ bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 # pprint.pprint(response1)
 # print("\n")
 
+# print("response4 \n")
+# response4 = bb.setProjectGroupPermissions('TEST', 'administrators', 'admin')
+# pprint.pprint(response4)
+# print("\n")
+
 # print("Create a repository in a project AKA: Client \n")
 # response2 = bb.createProjectRepository('TEST', 'site mover')
 # pprint.pprint("Slug shouldn't be NONE")
-# pprint.pprint(response2.get("slug"))
+# pprint.pprint(response2)
 # print("\n")
 
 repositorySlug = "site-mover"
@@ -27,14 +32,9 @@ repositorySlug = "site-mover"
 # pprint.pprint(response3)
 # print("\n")
 
-print("Set Repository Permission: Group \n")
-response3a = bb.setRepositoryPermissions('TEST', repositorySlug, "group", 'Administrators', 'admin')
-pprint.pprint(response3a)
-print("\n")
-
-# print("response4 \n")
-# response4 = bb.setProjectGroupPermissions('TEST', 'administrators', 'admin')
-# pprint.pprint(response4)
+# print("Set Repository Permission: Group \n")
+# response3a = bb.setRepositoryGroupPermissions('TEST', repositorySlug, 'Administrators', 'admin')
+# pprint.pprint(response3a)
 # print("\n")
 
 # print("git push origin --all")
