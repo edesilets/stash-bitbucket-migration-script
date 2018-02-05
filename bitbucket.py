@@ -65,7 +65,13 @@ class BitBucket(BitBucketRequest):
         response = self.bitBucketRequest.send("POST", "projects/"+projectKey+"/repos")
         return response
 
-    def setProjectGroupPermissions(self, projectKey, name, permission):
+    def setProjectPermissions(self, projectKey, user_or_group, name, permission):
+        user_or_group = user_or_group.lower()
+        if user_or_group == "group" or user_or_group == "groups":
+            properUserGroup = "groups"
+        elif user_or_group == "user" or user_or_group == "users":
+            properUserGroup = "users"
+
         permission = permission.lower()
         if permission == "read":
             properPermission = "PROJECT_READ"
@@ -74,7 +80,7 @@ class BitBucket(BitBucketRequest):
         elif permission == "admin":
             properPermission = "PROJECT_ADMIN"
 
-        uri            = "projects/"+projectKey+"/permissions/groups"
+        uri            = "projects/"+projectKey+"/permissions/"+properUserGroup
         queryParams    = "?permission="+properPermission+"&name="+name
         fullyFormedURI = uri + queryParams
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)

@@ -14,10 +14,15 @@ bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 # pprint.pprint(response1)
 # print("\n")
 
-# print("response4 \n")
-# response4 = bb.setProjectGroupPermissions('TEST', 'administrators', 'admin')
-# pprint.pprint(response4)
-# print("\n")
+print("response4 \n")
+response4 = bb.setProjectPermissions('TEST', 'groups', 'administrators', 'admin')
+pprint.pprint(response4)
+print("\n")
+
+print("response4 \n")
+response4 = bb.setProjectPermissions('TEST', 'users', 'Ethan.Desilets', 'admin')
+pprint.pprint(response4)
+print("\n")
 
 # print("Create a repository in a project AKA: Client \n")
 # response2 = bb.createProjectRepository('TEST', 'site mover')
@@ -27,15 +32,15 @@ bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 
 repositorySlug = "site-mover"
 
-print("Set Repository Permission: User \n")
-response3 = bb.setRepositoryPermissions('TEST', repositorySlug, "users", 'Ethan.Desilets', 'admin')
-pprint.pprint(response3)
-print("\n")
+# print("Set Repository Permission: User \n")
+# response3 = bb.setRepositoryPermissions('TEST', repositorySlug, "users", 'Ethan.Desilets', 'admin')
+# pprint.pprint(response3)
+# print("\n")
 
-print("Set Repository Permission: Group \n")
-response3a = bb.setRepositoryPermissions('TEST', repositorySlug, "groups", 'Administrators', 'admin')
-pprint.pprint(response3a)
-print("\n")
+# print("Set Repository Permission: Group \n")
+# response3a = bb.setRepositoryPermissions('TEST', repositorySlug, "groups", 'Administrators', 'admin')
+# pprint.pprint(response3a)
+# print("\n")
 
 # print("git push origin --all")
 
@@ -43,5 +48,3 @@ print("\n")
 #     print("Push error to dict\n");
 # else:
 #     print("moving on\n");
-
-# 3:14 pm
