@@ -56,7 +56,8 @@ def uploadToBitBucket(git_remote_url, git_folder_path):
         #     repo.remote(name='bitbucket').push()
 
 def saveRepositoriesLocally(repository, project, bitBucketGitUrl):
-        pprint.pprint('Stash Git URL: ' + repository['links']['clone'][0]['href'])
+        stash_git_url = repository['links']['clone'][0]['href']
+        pprint.pprint('Stash Git URL: ' + stash_git_url)
 
         path = starting_dir + project['name']
 
@@ -66,7 +67,7 @@ def saveRepositoriesLocally(repository, project, bitBucketGitUrl):
         pprint.pprint("Local Path: " + path)
         os.chdir(path)
 
-        os.system("git clone %s" % repository['links']['clone'][0]['href'])
+        os.system("git clone %s" % stash_git_url)
 
         # hyphens and lower case missing from repo name to git clone folder name
         gitFolderPath = path+"/"+repository['name'].lower().replace(" ","-")
