@@ -62,42 +62,46 @@ def uploadToBitBucket(git_remote_url, git_folder_path):
         #     # repo.remotes.origin.fetch()
         #     repo.remote(name='bitbucket').push()
 
+def setupRepositoryDirectory(project_name, repository_name):
+    # /Users/userName/Documents/python/stash/export
+    clone_path = os.getcwd() + '/export/' + project['name'] + "/" + repository['name']
+    clone_path_normalize = os.path.normpath(clone_path)
+    if not os.path.exists(clone_path_normalize):
+        os.makedirs(clone_path_normalize)
+    return clone_path_normalize
+
+
 bb       = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 stash    = stash.Stash(stash_host, stash_username, stash_password)
 projects = stash.getProjects()
-
-# /Users/userName/Documents/python/stash/export
-starting_dir = os.getcwd() + '/' + 'export/'
 
 # Projects
 for project in projects:
     pprint.pprint('Stash Folder Name: ' + project['name'])
     pprint.pprint('Stash Project Key: ' + project['key'])
+    print "\n"
     project_key = project['key']
 
     projectsRepos = stash.getProjectRepositories(project_key)
     project_repositories = projectsRepos.list()
 
-    # pprint.pprint(project_repositories)
-    # print '\n'
     setupBitBucketProject(project_key, project['name'])
 
     for repository in project_repositories:
         stash_git_url = repository['links']['clone'][1]['href']
+        repository_name = repository['name']
 
-        pprint.pprint('Stash Project Name: ' + repository['name'])
-        bitBucketGitUrl = setupBitBucketRepository(project_key, repository['name'])
+        pprint.pprint('Stash Project Name: ' + repository_name)
+        bitBucketGitUrl = setupBitBucketRepository(project_key, repository_name)
 
-        path = starting_dir + project['name'] + "/" + repository['name']
-        if not os.path.exists(path):
-            os.makedirs(path)
-        pprint.pprint("Generated Local Path: " + path)
+        clone_to_path = setupRepositoryDirectory(project['name'], repository_name)
+        pprint.pprint("Generated Local Path: " + clone_to_path)
         pprint.pprint('Stash Git URL: ' + stash_git_url)
 
         print "\n"
-        cloneFromStash(stash_git_url, path)
+        cloneFromStash(stash_git_url, clone_to_path)
         print "\n"
-        uploadToBitBucket(bitBucketGitUrl, path)
+        uploadToBitBucket(bitBucketGitUrl, clone_to_path)
         print "\n"
         pprint.pprint("Directory after getting ready for next clone:  " + os.getcwd())
         print "\n"
