@@ -50,7 +50,7 @@ def uploadToBitBucket(git_remote_url, git_folder_path):
 
         git_ssh_identity_file = os.path.expanduser('~/.ssh/bitBucket')
         git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
-        pprint.pprint(git_ssh_cmd)
+
         with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
             pprint.pprint("Pushing to bitBucket with command: "+git_ssh_cmd)
             Repo(git_folder_path).remote(name='bitbucket').push('master')
