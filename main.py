@@ -20,6 +20,13 @@ def gitUrlParse(url, ssh_conf_name):
     modify = url.replace(urlParsed.netloc, ssh_conf_name)
     return modify
 
+def findGitSSHURL(clone_url_array):
+    for urlDescription in clone_url_array:
+        if urlDescription["name"] == "ssh":
+            return urlDescription["href"]
+        else:
+            sys.exit("Could not find Git ssh url in clone array!")
+
 def setupBitBucketProject(projectkey, projectName):
     bb.createProject(projectkey, projectName, '')
     bb.setProjectPermissions(projectkey, "group", "Administrators", 'admin')
@@ -28,7 +35,8 @@ def setupBitBucketProject(projectkey, projectName):
 def setupBitBucketRepository(projectKey, name):
     repositoryInfo = bb.createProjectRepository(projectKey, name)
     repositoryKey  = repositoryInfo['slug']
-    repositoryGitUrl = repositoryInfo['links']['clone'][0]['href']
+    repositoryCloneUrls = repositoryInfo['links']['clone']
+    repositoryGitUrl = findGitSSHURL(repositoryCloneUrls)
 
     bb.setRepositoryPermissions(projectKey, repositoryKey, "group", "Administrators", 'admin')
     bb.setRepositoryPermissions(projectKey, repositoryKey, "user", "Ethan.Desilets", 'admin')
@@ -88,7 +96,7 @@ for project in projects:
     setupBitBucketProject(project_key, project['name'])
 
     for repository in project_repositories:
-        stash_git_url = repository['links']['clone'][1]['href']
+        stash_git_url = findGitSSHURL(repository['links']['clone'])
         repository_name = repository['name']
 
         pprint.pprint('Stash Project Name: ' + repository_name)
