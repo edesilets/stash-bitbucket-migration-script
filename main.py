@@ -34,6 +34,13 @@ def setupBitBucketRepository(projectKey, name):
     bb.setRepositoryPermissions(projectKey, repositoryKey, "user", "Ethan.Desilets", 'admin')
     return repositoryGitUrl
 
+def cloneFromStash(git_clone_url, clone_to_dir):
+    git_ssh_identity_file = os.path.expanduser('~/.ssh/ethanDstash')
+    git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
+    pprint.pprint("Clone from STASH with command: "+ git_ssh_cmd)
+    Repo.clone_from(git_clone_url, clone_to_dir,env={'GIT_SSH_COMMAND': git_ssh_cmd })
+    pprint.pprint("Clone from STASH completed")
+
 def uploadToBitBucket(git_remote_url, git_folder_path):
         cleanURL = gitUrlParse(git_remote_url, 'bitBucketGit')
         add_remote = "git remote add bitbucket %s" % cleanURL
