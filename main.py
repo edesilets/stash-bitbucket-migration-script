@@ -56,7 +56,7 @@ def uploadToBitBucket(git_remote_url, git_folder_path):
         #     repo.remote(name='bitbucket').push()
 
 def saveRepositoriesLocally(repository, project, bitBucketGitUrl):
-        stash_git_url = repository['links']['clone'][0]['href']
+        stash_git_url = repository['links']['clone'][1]['href']
         pprint.pprint('Stash Git URL: ' + stash_git_url)
 
         path = starting_dir + project['name']
