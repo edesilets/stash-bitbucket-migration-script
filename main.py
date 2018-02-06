@@ -42,51 +42,25 @@ def cloneFromStash(git_clone_url, clone_to_dir):
     pprint.pprint("Clone from STASH completed")
 
 def uploadToBitBucket(git_remote_url, git_folder_path):
+        git_folder_path = os.path.normpath(git_folder_path)
+        # Add new bitbucket remote
         cleanURL = gitUrlParse(git_remote_url, 'bitBucketGit')
-        add_remote = "git remote add bitbucket %s" % cleanURL
-        pprint.pprint(add_remote)
-        os.system(add_remote)
-        os.system("git fetch origin")
+        Repo(git_folder_path).create_remote('bitbucket', url=cleanURL)
 
         git_ssh_identity_file = os.path.expanduser('~/.ssh/bitBucket')
         git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
 
+        pprint.pprint("Bitbucket Git URL: "+git_folder_path)
+        pprint.pprint("Pushing to bitBucket with command: "+git_ssh_cmd)
         with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
-            pprint.pprint("Pushing to bitBucket with command: "+git_ssh_cmd)
             Repo(git_folder_path).remote(name='bitbucket').push('master')
-            pprint.pprint("Pushing to bitbucket completed")
+        pprint.pprint("Pushing to bitbucket completed")
 
         # repo   = Repo(gitFolderPath)
         # ssh_cmd = 'ssh -i /Users/ethan.desilets/.ssh/bitBucket'
         # with repo.git.custom_environment(GIT_SSH_COMMAND=ssh_cmd):
         #     # repo.remotes.origin.fetch()
         #     repo.remote(name='bitbucket').push()
-
-def saveRepositoriesLocally(repository, project, bitBucketGitUrl):
-        stash_git_url = repository['links']['clone'][1]['href']
-        pprint.pprint('Stash Git URL: ' + stash_git_url)
-
-        path = starting_dir + project['name']
-
-        if not os.path.exists(path):
-            os.makedirs(path)
-
-        pprint.pprint("Local Path: " + path)
-        os.chdir(path)
-
-        os.system("git clone %s" % stash_git_url)
-
-        # hyphens and lower case missing from repo name to git clone folder name
-        gitFolderPath = path+"/"+repository['name'].lower().replace(" ","-")
-
-        os.chdir(gitFolderPath)
-        pprint.pprint("Directory after clone:  " +os.getcwd())
-
-        uploadToBitBucket(bitBucketGitUrl, gitFolderPath)
-
-        os.chdir(starting_dir)
-        pprint.pprint("Directory after getting ready for next clone:  " +os.getcwd())
-        print '\n'
 
 bb       = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
 stash    = stash.Stash(stash_host, stash_username, stash_password)
@@ -109,9 +83,23 @@ for project in projects:
     setupBitBucketProject(project_key, project['name'])
 
     for repository in project_repositories:
+        stash_git_url = repository['links']['clone'][1]['href']
+
         pprint.pprint('Stash Project Name: ' + repository['name'])
         bitBucketGitUrl = setupBitBucketRepository(project_key, repository['name'])
-        saveRepositoriesLocally(repository, project, bitBucketGitUrl)
 
-        print "########### Moving to next REPOSITORY! ###########\n\n\n\n\n"
+        path = starting_dir + project['name'] + "/" + repository['name']
+        if not os.path.exists(path):
+            os.makedirs(path)
+        pprint.pprint("Generated Local Path: " + path)
+        pprint.pprint('Stash Git URL: ' + stash_git_url)
+
+        print "\n"
+        cloneFromStash(stash_git_url, path)
+        print "\n"
+        uploadToBitBucket(bitBucketGitUrl, path)
+        print "\n"
+        pprint.pprint("Directory after getting ready for next clone:  " + os.getcwd())
+        print "\n"
+        print "########### Moving to next REPOSITORY! ###########\n\n\n"
     break
