@@ -15,6 +15,7 @@ stash_username = os.environ.get("STASH_USERNAME")
 stash_password = os.environ.get("STASH_PASSWORD")
 stash_host     = os.environ.get("STASH_HOST")
 
+##### Utilities 
 def gitUrlParse(url, ssh_conf_name):
     urlParsed = urlparse(url)
     modify = url.replace(urlParsed.netloc, ssh_conf_name)
@@ -23,16 +24,16 @@ def gitUrlParse(url, ssh_conf_name):
 def findGitSSHURL(clone_url_array):
     error_message = "Could not find Git ssh url in clone array!"
     if clone_url_array:
-    for urlDescription in clone_url_array:
+        for urlDescription in clone_url_array:
             if urlDescription.has_key("name") and urlDescription.has_key("href"):
-        if urlDescription["name"] == "ssh":
-                    pprint.pprint(urlDescription)
-            return urlDescription["href"]
-        else:
+                if urlDescription["name"] == "ssh":
+                    return urlDescription["href"]
+            else:
                 sys.exit(error_message)
     else:
         sys.exit(error_message)
 
+##### Setup Process
 def setupBitBucketProject(projectkey, projectName):
     bb.createProject(projectkey, projectName, '')
     bb.setProjectPermissions(projectkey, "group", "Administrators", 'admin')
@@ -48,6 +49,7 @@ def setupBitBucketRepository(projectKey, name):
     bb.setRepositoryPermissions(projectKey, repositoryKey, "user", "Ethan.Desilets", 'admin')
     return repositoryGitUrl
 
+##### Extraction Process
 def cloneFromStash(git_clone_url, clone_to_dir):
     git_ssh_identity_file = os.path.expanduser('~/.ssh/ethanDstash')
     git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
@@ -118,6 +120,5 @@ for project in projects:
         uploadToBitBucket(bitBucketGitUrl, clone_to_path)
         print "\n"
         pprint.pprint("Directory after getting ready for next clone:  " + os.getcwd())
-        print "\n"
         print "########### Moving to next REPOSITORY! ###########\n\n\n"
     break
