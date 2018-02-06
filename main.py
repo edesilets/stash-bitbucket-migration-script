@@ -21,11 +21,17 @@ def gitUrlParse(url, ssh_conf_name):
     return modify
 
 def findGitSSHURL(clone_url_array):
+    error_message = "Could not find Git ssh url in clone array!"
+    if clone_url_array:
     for urlDescription in clone_url_array:
+            if urlDescription.has_key("name") and urlDescription.has_key("href"):
         if urlDescription["name"] == "ssh":
+                    pprint.pprint(urlDescription)
             return urlDescription["href"]
         else:
-            sys.exit("Could not find Git ssh url in clone array!")
+                sys.exit(error_message)
+    else:
+        sys.exit(error_message)
 
 def setupBitBucketProject(projectkey, projectName):
     bb.createProject(projectkey, projectName, '')
