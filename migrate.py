@@ -11,6 +11,10 @@ bitbucket_username = os.environ.get("BITBUCKET_USERNAME")
 bitbucket_password = os.environ.get("BITBUCKET_PASSWORD")
 bitbucket_host     = os.environ.get("BITBUCKET_HOST")
 bitbucket_ssh_key_path = os.environ.get("BITBUCKET_SSH_KEY_PATH")
+# Permissions
+bitbucket_default_group = os.environ.get("BITBUCKET_DEFAULT_GROUP")
+bitbucket_default_user  = os.environ.get("BITBUCKET_DEFAULT_USER")
+bitbucket_default_permission = os.environ.get("BITBUCKET_DEFAULT_PERMISSION")
 
 stash_username = os.environ.get("STASH_USERNAME")
 stash_password = os.environ.get("STASH_PASSWORD")
@@ -49,8 +53,8 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
     ##### Setup Process
     def setupBitBucketProject(self, projectkey, projectName):
         self.bb.createProject(projectkey, projectName, '')
-        self.bb.setProjectPermissions(projectkey, "group", "Administrators", 'admin')
-        self.bb.setProjectPermissions(projectkey, "user", "Ethan.Desilets", 'admin')
+        self.bb.setProjectPermissions(projectkey, "group", bitbucket_default_group, bitbucket_default_permission)
+        self.bb.setProjectPermissions(projectkey, "user", bitbucket_default_user, bitbucket_default_permission)
 
     def setupBitBucketRepository(self, projectKey, name):
         repositoryInfo = self.bb.createProjectRepository(projectKey, name)
@@ -58,8 +62,8 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
         repositoryCloneUrls = repositoryInfo['links']['clone']
         repositoryGitUrl = self.findGitSSHURL(repositoryCloneUrls)
 
-        self.bb.setRepositoryPermissions(projectKey, repositoryKey, "group", "Administrators", 'admin')
-        self.bb.setRepositoryPermissions(projectKey, repositoryKey, "user", "Ethan.Desilets", 'admin')
+        self.bb.setRepositoryPermissions(projectKey, repositoryKey, "group", bitbucket_default_group, bitbucket_default_permission)
+        self.bb.setRepositoryPermissions(projectKey, repositoryKey, "user", bitbucket_default_user, bitbucket_default_permission)
         return repositoryGitUrl
 
     ##### Extraction Process
