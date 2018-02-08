@@ -69,6 +69,10 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
         Repo.clone_from(git_clone_url, clone_to_dir,env={'GIT_SSH_COMMAND': git_ssh_cmd })
         pprint.pprint("Clone from STASH completed")
 
+        pprint.pprint("Fetching from STASH")
+        Repo(clone_to_dir).remote(name='origin').fetch()
+        pprint.pprint("Fetching from STASH completed")
+
     def uploadToBitBucket(self, git_remote_url, git_folder_path):
             git_folder_path = os.path.normpath(git_folder_path)
             # Add new bitbucket remote
