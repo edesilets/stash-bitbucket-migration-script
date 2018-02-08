@@ -93,11 +93,11 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
                 Repo(git_folder_path).remote(name='bitbucket').push(refspec="+refs/tags/*:refs/tags/*")
                 pprint.pprint("Pushing Tags to BitBucket COMPLETE")
 
-            # repo   = Repo(gitFolderPath)
-            # ssh_cmd = 'ssh -i /Users/ethan.desilets/.ssh/bitBucket'
-            # with repo.git.custom_environment(GIT_SSH_COMMAND=ssh_cmd):
-            #     # repo.remotes.origin.fetch()
-            #     repo.remote(name='bitbucket').push()
+                # NOTE: refspec=":HEAD" Deletes the HEAD branch that is created on the new remote AKA: bitbucket
+                pprint.pprint("Delete HEAD bransh on BitBucket")
+                Repo(git_folder_path).remote(name='bitbucket').push(refspec=":HEAD")
+                pprint.pprint("Delete HEAD bransh on BitBucket COMPLETE!")
+            pprint.pprint("Pushing to BitBucket completed")
 
     def setupRepositoryDirectory(self, project_name, repository_name):
         # /Users/userName/Documents/python/stash/export
