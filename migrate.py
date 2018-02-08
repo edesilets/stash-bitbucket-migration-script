@@ -11,6 +11,7 @@ bitbucket_username = os.environ.get("BITBUCKET_USERNAME")
 bitbucket_password = os.environ.get("BITBUCKET_PASSWORD")
 bitbucket_host     = os.environ.get("BITBUCKET_HOST")
 bitbucket_ssh_key_path = os.environ.get("BITBUCKET_SSH_KEY_PATH")
+bitbucket_ssh_config_hostname = os.environ.get("BITBUCKET_SSH_CONFIG_HOSTNAME")
 # Permissions
 bitbucket_default_group = os.environ.get("BITBUCKET_DEFAULT_GROUP")
 bitbucket_default_user  = os.environ.get("BITBUCKET_DEFAULT_USER")
@@ -79,7 +80,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
     def uploadToBitBucket(self, git_remote_url, git_folder_path):
             git_folder_path = os.path.normpath(git_folder_path)
             # Add new bitbucket remote
-            cleanURL = self.gitUrlParse(git_remote_url, 'bitBucketGit')
+            cleanURL = self.gitUrlParse(git_remote_url, bitbucket_ssh_config_hostname)
             Repo(git_folder_path).create_remote('bitbucket', url=cleanURL)
 
             pprint.pprint("Bitbucket Git URL: "+cleanURL)
