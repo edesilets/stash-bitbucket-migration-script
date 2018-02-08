@@ -36,6 +36,7 @@ for project in Migrate.stashProjects:
         Migrate.cloneFromStash(stash_git_url, clone_to_path)
         print "\n"
         Migrate.uploadToBitBucket(bitBucketGitUrl, clone_to_path)
+        Migrate.removeLocalRepository(clone_to_path)
         repository_time_end = time.time()
         print("--- Repository Migration took %s seconds ---" % (repository_time_end - repository_time_start))
         print "########### Moving to next REPOSITORY! ###########\n\n"

@@ -2,6 +2,7 @@ import os
 import bitbucket
 import stash
 import settings
+import shutil
 import pprint
 from urlparse import urlparse
 from git import Repo
@@ -107,3 +108,10 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
         if not os.path.exists(clone_path_normalize):
             os.makedirs(clone_path_normalize)
         return clone_path_normalize
+
+    def removeLocalRepository(self, path):
+        path_normalize = os.path.normpath(path)
+        if os.path.exists(path_normalize):
+            shutil.rmtree(path_normalize)
+        else:
+            print "Path Doesn't exist can not remove."
