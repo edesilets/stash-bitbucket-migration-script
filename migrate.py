@@ -64,13 +64,6 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
 
     ##### Extraction Process
     def cloneFromStash(self, git_clone_url, clone_to_dir):
-        # git clone
-        # git fetch origin
-        # Push Branches git push bitbucket refs/remotes/origin/*:refs/heads/*
-        # Push TAGS     git push bitbucket refs/tags/*:refs/tags/*
-
-        # GIT_SSH_COMMAND='ssh -i /Users/ethan.desilets/.ssh/bitBucket -p 7990' git push bitbucket refs/remotes/origin/*:refs/heads/*
-
         git_ssh_cmd = self.gitSSHCommand(stash_ssh_key_path)
         Repo.clone_from(git_clone_url, clone_to_dir,env={'GIT_SSH_COMMAND': git_ssh_cmd })
         pprint.pprint("Clone from STASH completed")
