@@ -10,16 +10,24 @@ from git import Git
 bitbucket_username = os.environ.get("BITBUCKET_USERNAME")
 bitbucket_password = os.environ.get("BITBUCKET_PASSWORD")
 bitbucket_host     = os.environ.get("BITBUCKET_HOST")
+bitbucket_ssh_key_path = os.environ.get("BITBUCKET_SSH_KEY_PATH")
 
 stash_username = os.environ.get("STASH_USERNAME")
 stash_password = os.environ.get("STASH_PASSWORD")
 stash_host     = os.environ.get("STASH_HOST")
+stash_ssh_key_path = os.environ.get("STASH_SSH_KEY_PATH")
 
 class Migrate(bitbucket.BitBucket,stash.Stash):
     def __init__(self):
         self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
         self.stash = stash.Stash(stash_host, stash_username, stash_password)
         self.stashProjects = self.stash.getProjects()
+
+    def gitSSHCommand(self, ssh_key_path):
+        git_ssh_identity_file = os.path.expanduser(ssh_key_path)
+        git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
+        pprint.pprint("Git using ssh comand: "+git_ssh_cmd)
+        return git_ssh_cmd
 
     def gitUrlParse(self, url, ssh_conf_name):
         urlParsed = urlparse(url)
@@ -63,9 +71,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
 
         # GIT_SSH_COMMAND='ssh -i /Users/ethan.desilets/.ssh/bitBucket -p 7990' git push bitbucket refs/remotes/origin/*:refs/heads/*
 
-        git_ssh_identity_file = os.path.expanduser('~/.ssh/ethanDstash')
-        git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
-        pprint.pprint("Clone from STASH with command: "+ git_ssh_cmd)
+        git_ssh_cmd = self.gitSSHCommand(stash_ssh_key_path)
         Repo.clone_from(git_clone_url, clone_to_dir,env={'GIT_SSH_COMMAND': git_ssh_cmd })
         pprint.pprint("Clone from STASH completed")
 
@@ -79,11 +85,8 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
             cleanURL = self.gitUrlParse(git_remote_url, 'bitBucketGit')
             Repo(git_folder_path).create_remote('bitbucket', url=cleanURL)
 
-            git_ssh_identity_file = os.path.expanduser('~/.ssh/bitBucket')
-            git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
-
             pprint.pprint("Bitbucket Git URL: "+cleanURL)
-            pprint.pprint("Pushing to BitBucket with command: "+git_ssh_cmd)
+            git_ssh_cmd = self.gitSSHCommand(bitbucket_ssh_key_path)
             with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
                 pprint.pprint("Pushing Branches to BitBucket")
                 # refs/remotes/origin/*:refs/heads/*    VERY close but pushes HEAD in bitbucket.....
@@ -97,7 +100,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
                 pprint.pprint("Delete HEAD bransh on BitBucket")
                 Repo(git_folder_path).remote(name='bitbucket').push(refspec=":HEAD")
                 pprint.pprint("Delete HEAD bransh on BitBucket COMPLETE!")
-            pprint.pprint("Pushing to BitBucket completed")
+            print "Pushing to BitBucket completed"
 
     def setupRepositoryDirectory(self, project_name, repository_name):
         # /Users/userName/Documents/python/stash/export
