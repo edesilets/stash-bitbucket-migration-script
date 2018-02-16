@@ -4,30 +4,6 @@ import pprint
 import time
 
 Migrate = migrate.Migrate()
-
-def gatherStashInformation():
-    repository_information = {}
-    # Projects
-    for project in Migrate.stashProjects:
-        projectsRepos = Migrate.stash.getProjectRepositories(project['key'])
-        project_repositories = projectsRepos.list()
-
-        repository_information[project['key']] = {
-            "project": project["name"],
-            "repositories": []
-        }
-
-        for repository in project_repositories:
-            stash_git_url = Migrate.findGitSSHURL(repository['links']['clone'])
-            repository_information[project['key']]["repositories"].append({
-                repository['name']: stash_git_url
-            })
-    return repository_information
-
-stash_information = gatherStashInformation()
-pprint.pprint(stash_information)
-
-# Naming = namingConventions.NamingConventions()
 result = Migrate.stashProjects
 
 # Projects
