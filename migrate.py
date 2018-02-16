@@ -27,6 +27,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
     def __init__(self):
         self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
         self.stash = stash.Stash(stash_host, stash_username, stash_password)
+        self.stashInformation = self.stash.gatherInformation()
 
     def gitSSHCommand(self, ssh_key_path):
         git_ssh_identity_file = os.path.expanduser(ssh_key_path)
