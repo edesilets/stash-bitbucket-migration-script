@@ -12,7 +12,7 @@ class Stash():
     def getProjectRepositories(self, project_key):
         return self.stash.projects[project_key].repos
 
-    def gatherStashInformation(self):
+    def gatherInformation(self):
         self.repository_information = {}
         for project in self.getProjects():
             projectsRepos = self.getProjectRepositories(project['key'])
