@@ -3,8 +3,10 @@ import csv
 import pprint
 
 class NamingConventions():
-    results = []
-    csvPath = ''
+    TSV_FILE = '\t'
+    CSV_FILE = ','
+    results  = {}
+    csvPath  = ''
 
     def __init__(self):
         self.setCSVpath()
@@ -18,3 +20,20 @@ class NamingConventions():
             for row in reader: # each row is a list
                 self.results.append(row)
         return self.results
+
+    def svDict(self, TSV_or_CSV = TSV_FILE):
+        if not isinstance(TSV_or_CSV, basestring):
+            print "delimiter must be TSV_FILE, CSV_FILE, or string delimiter"
+
+        # to ignore HEADERS in file. No auto-detect headers.
+        i = 0
+        with open(self.csvPath, mode='r') as csvfile:
+            reader = csv.reader(csvfile, delimiter=TSV_or_CSV)
+            for row in reader:
+                if not i == 0:
+                    self.results[row[0]] = {
+                            "new_name": row[1],
+                            "new_key": row[2],
+                            "description": row[3]
+                        }
+                i+=1
