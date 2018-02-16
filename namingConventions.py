@@ -11,7 +11,7 @@ class NamingConventions():
         self.setCSVpath()
 
     def setCSVpath(self):
-        self.csvPath = os.path.normpath(os.getcwd()+"/test/update-names.csv")
+        self.csvPath = os.path.normpath(os.getcwd()+"/test/update-names.tsv")
 
     def csvArray(self):
         with open(self.csvPath) as csvfile:
