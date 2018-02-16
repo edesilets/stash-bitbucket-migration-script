@@ -7,7 +7,6 @@ class NamingConventions():
     csvPath = ''
 
     def __init__(self):
-        print "hello"
         self.setCSVpath()
 
     def setCSVpath(self):
