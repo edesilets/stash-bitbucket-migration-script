@@ -36,6 +36,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
         return git_ssh_cmd
 
     def gitUrlParse(self, url, ssh_conf_name):
+        # TODO: rename variables to make sense.
         urlParsed = urlparse(url)
         modify = url.replace(urlParsed.netloc, ssh_conf_name)
         return modify
