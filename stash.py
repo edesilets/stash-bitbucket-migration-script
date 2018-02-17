@@ -32,4 +32,5 @@ class Stash():
                     "name": repository['name'],
                     "clone_url": stash_git_url
                 })
+            print "Working on " + project['key']
         return self.repository_information
