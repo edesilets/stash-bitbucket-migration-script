@@ -1,6 +1,7 @@
 import os
 import bitbucket
 import stash
+import tools
 import settings
 import shutil
 import pprint
@@ -28,6 +29,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
         self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
         self.stash = stash.Stash(stash_host, stash_username, stash_password)
         self.stashInformation = self.stash.gatherInformation()
+        self.tools = tools.Tools()
 
     def gitSSHCommand(self, ssh_key_path):
         git_ssh_identity_file = os.path.expanduser(ssh_key_path)
@@ -41,18 +43,6 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
         modify = url.replace(urlParsed.netloc, ssh_conf_name)
         return modify
 
-    def findGitSSHURL(self, clone_url_array):
-        error_message = "Could not find Git ssh url in clone array!"
-        if clone_url_array:
-            for urlDescription in clone_url_array:
-                if urlDescription.has_key("name") and urlDescription.has_key("href"):
-                    if urlDescription["name"] == "ssh":
-                        return urlDescription["href"]
-                else:
-                    sys.exit(error_message)
-        else:
-            sys.exit(error_message)
-
     ##### Setup Process
     def setupBitBucketProject(self, projectkey, projectName):
         self.bb.createProject(projectkey, projectName, '')
@@ -63,7 +53,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
         repositoryInfo = self.bb.createProjectRepository(projectKey, name)
         repositoryKey  = repositoryInfo['slug']
         repositoryCloneUrls = repositoryInfo['links']['clone']
-        repositoryGitUrl = self.findGitSSHURL(repositoryCloneUrls)
+        repositoryGitUrl = self.tools.findGitSSHURL(repositoryCloneUrls)
 
         self.bb.setRepositoryPermissions(projectKey, repositoryKey, "group", bitbucket_default_group, bitbucket_default_permission)
         self.bb.setRepositoryPermissions(projectKey, repositoryKey, "user", bitbucket_default_user, bitbucket_default_permission)

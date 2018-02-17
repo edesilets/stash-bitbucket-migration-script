@@ -1,10 +1,12 @@
 #!/usr/bin/python
 import stashy
 import migrate
+import tools
 
 class Stash():
     def __init__(self, host, username, password):
         self.stash = stashy.connect(host, username, password)
+        self.tools = tools.Tools()
 
     def getProjects(self):
         return self.stash.projects.list()
@@ -25,8 +27,9 @@ class Stash():
 
             for repository in project_repositories:
                 # TODO: move find git ssh url to tools service.... or something.
-                stash_git_url = migrate.Migrate.findGitSSHURL(repository['links']['clone'])
+                stash_git_url = self.tools.findGitSSHURL(repository['links']['clone'])
                 self.repository_information[project['key']]["repositories"].append({
                     repository['name']: stash_git_url
                 })
+            print "."
         return self.repository_information
