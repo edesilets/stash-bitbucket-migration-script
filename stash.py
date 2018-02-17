@@ -21,7 +21,7 @@ class Stash():
             project_repositories = projectsRepos.list()
 
             self.repository_information[project['key']] = {
-                "project": project["name"],
+                "name": project["name"],
                 "repositories": []
             }
 
