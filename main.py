@@ -2,10 +2,17 @@ import os
 import migrate
 import pprint
 import time
+import namingConventions
 
 Migrate = migrate.Migrate()
+stashInformation = Migrate.stashInformation
 
-for project_key, project in Migrate.stashInformation.iteritems():
+update_naming_convention = True
+
+if update_naming_convention:
+    stashInformation = namingConventions.NamingConventions().newInformation(stashInformation)
+
+for project_key, project in stashInformation.iteritems():
     project_time_start = time.time()
     print '########### Exporting Project "'+project['name']+'" ###########'
     Migrate.setupBitBucketProject(project_key, project['name'])
