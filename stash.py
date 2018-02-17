@@ -31,5 +31,4 @@ class Stash():
                 self.repository_information[project['key']]["repositories"].append({
                     repository['name']: stash_git_url
                 })
-            print "."
         return self.repository_information
