@@ -10,6 +10,7 @@ class NamingConventions():
 
     def __init__(self):
         self.setCSVpath()
+        self.svDict()
 
     def setCSVpath(self):
         self.csvPath = os.path.normpath(os.getcwd()+"/test/update-names.tsv")
@@ -37,3 +38,20 @@ class NamingConventions():
                             "description": row[3]
                         }
                 i+=1
+
+    def newInformation(self, stashInformation):
+        newStashInformation = {}
+        for key, project in stashInformation.iteritems():
+            incomingName = project["name"]
+            if incomingName in self.results:
+                new_info = self.results[incomingName]
+                stashInformation[key]['name'] = new_info['new_name']
+                stashInformation[key]['description'] = new_info['description']
+
+                # NOTE: I feel like memory wise this could be hanled better.
+                newStashInformation[new_info['new_key']] = stashInformation[key]
+                # NOTE: can't "del" in middle of iteration 
+            else:
+                newStashInformation[key] = stashInformation[key]
+        del stashInformation
+        return newStashInformation
