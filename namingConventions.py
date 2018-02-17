@@ -40,6 +40,7 @@ class NamingConventions():
                 i+=1
 
     def newInformation(self, stashInformation):
+        # TODO: Standardize repository names. EX: snake_case
         newStashInformation = {}
         for key, project in stashInformation.iteritems():
             incomingName = project["name"]
