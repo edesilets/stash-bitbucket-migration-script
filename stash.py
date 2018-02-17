@@ -29,6 +29,7 @@ class Stash():
                 # TODO: move find git ssh url to tools service.... or something.
                 stash_git_url = self.tools.findGitSSHURL(repository['links']['clone'])
                 self.repository_information[project['key']]["repositories"].append({
-                    repository['name']: stash_git_url
+                    "name": repository['name'],
+                    "clone_url": stash_git_url
                 })
         return self.repository_information
