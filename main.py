@@ -7,13 +7,13 @@ Migrate = migrate.Migrate()
 
 for project_key, project in Migrate.stashInformation.iteritems():
     project_time_start = time.time()
-    print "########### Exporting Project "+project['name']+" ###########"
+    print '########### Exporting Project "'+project['name']+'" ###########'
     Migrate.setupBitBucketProject(project_key, project['name'])
 
     for repository in project['repositories']:
         repository_time_start = time.time()
 
-        print "########### Migrating "+repository['name']+" from STASH! ###########"
+        print '########### Migrating "'+repository['name']+'" from STASH! ###########'
         bitBucketGitUrl = Migrate.setupBitBucketRepository(project_key, repository['name'])
         clone_to_path   = Migrate.setupRepositoryDirectory(project['name'], repository['name'])
 
