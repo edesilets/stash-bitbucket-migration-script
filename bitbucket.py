@@ -6,7 +6,8 @@ import json
 import base64
 import pprint
 import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class BitBucketRequest:
     baseurl = ""
