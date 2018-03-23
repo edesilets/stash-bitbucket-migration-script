@@ -1,6 +1,7 @@
 import os
 import csv
 import pprint
+import re
 
 class NamingConventions():
     TSV_FILE = '\t'
@@ -56,3 +57,12 @@ class NamingConventions():
                 newStashInformation[key] = stashInformation[key]
         del stashInformation
         return newStashInformation
+
+    # NOTE: Dont remember what I was going to do with this. Maybe format string to title format.
+    def title_except(s):
+        articles = ['a', 'an', 'of', 'the', 'is']
+        word_list = re.split(' ', s)       # re.split behaves as expected
+        final = [word_list[0].capitalize()]
+        for word in word_list[1:]:
+            final.append(word if word in articles else word.capitalize())
+        return " ".join(final)
