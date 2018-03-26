@@ -55,16 +55,18 @@ class BitBucketRequest:
 class BitBucketCloud(BitBucketRequest):
     def __init__(self, host, username, password):
         self.bitBucketRequest = BitBucketRequest(host, username, password, True)
+        self.teamUserName = self.getTeam()['values'][0]['username']
+
+    def getTeam(self):
+        response = self.bitBucketRequest.send("GET", "teams?role=admin")
+        return response
 
     def createProject(self, key, name, description):
-        pprint.pprint(name)
-        pprint.pprint(key)
-        pprint.pprint(description)
         self.bitBucketRequest.setPayload("key", key)
         self.bitBucketRequest.setPayload("name", name)
         self.bitBucketRequest.setPayload("description", description)
         self.bitBucketRequest.setPayload("is_private", True)
-        response = self.bitBucketRequest.send("POST", "teams/hillholliday/projects/")
+        response = self.bitBucketRequest.send("POST", "teams/"+self.teamUserName+"/projects/")
         return response
 
     def createProjectRepository(self, projectKey, name, forkable=True):
