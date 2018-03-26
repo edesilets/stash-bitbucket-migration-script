@@ -87,9 +87,9 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
                 pprint.pprint("Pushing Tags to BitBucket COMPLETE")
 
                 # NOTE: refspec=":HEAD" Deletes the HEAD branch that is created on the new remote AKA: bitbucket
-                pprint.pprint("Delete HEAD bransh on BitBucket")
+                pprint.pprint("Delete HEAD branch on BitBucket")
                 Repo(git_folder_path).remote(name='bitbucket').push(refspec=":HEAD")
-                pprint.pprint("Delete HEAD bransh on BitBucket COMPLETE!")
+                pprint.pprint("Delete HEAD branch on BitBucket COMPLETE!")
             print "Pushing to BitBucket completed"
 
     def setupRepositoryDirectory(self, project_name, repository_name):
