@@ -27,7 +27,7 @@ stash_ssh_key_path = os.environ.get("STASH_SSH_KEY_PATH")
 
 class Migrate(bitbucket.BitBucket,stash.Stash):
     def __init__(self):
-        self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password, bitbucket_cloud)
+        self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password, bitbucket_cloud).bitbucket
         self.stash = stash.Stash(stash_host, stash_username, stash_password)
         self.stashInformation = self.stash.gatherInformation()
         self.tools = tools.Tools()

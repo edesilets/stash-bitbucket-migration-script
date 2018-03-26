@@ -108,3 +108,10 @@ class BitBucket(BitBucketRequest):
 
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)
         return response
+class BitBucket(BitBucketServer, BitBucketCloud):
+
+    def __init__(self, host, username, password, cloud=False):
+        if cloud:
+            self.bitbucket = BitBucketCloud(host, username, password)
+        else:
+            self.bitbucket =  BitBucketServer(host, username, password)
