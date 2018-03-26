@@ -70,10 +70,14 @@ class BitBucketCloud(BitBucketRequest):
         return response
 
     def createProjectRepository(self, projectKey, name, forkable=True):
-        self.bitBucketRequest.setPayload("name", name)
-        self.bitBucketRequest.setPayload("scmId", "git")
-        self.bitBucketRequest.setPayload("forkable", forkable)
-        response = self.bitBucketRequest.send("POST", "projects/"+projectKey+"/repos")
+        self.bitBucketRequest.setPayload("project", {"key": projectKey})
+        self.bitBucketRequest.setPayload("scm", "git")
+        self.bitBucketRequest.setPayload("is_private", True)
+        if forkable:
+            self.bitBucketRequest.setPayload("fork_policy", 'allow_forks')
+        else:
+            self.bitBucketRequest.setPayload("fork_policy", 'no_forks')
+        response = self.bitBucketRequest.send("POST", "repositories/"+self.teamUserName+"/"+ name)
         return response
 
     def setProjectPermissions(self, projectKey, user_or_group, name, permission):
