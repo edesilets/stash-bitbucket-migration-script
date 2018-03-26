@@ -9,6 +9,7 @@ from urlparse import urlparse
 from git import Repo
 from git import Git
 
+bitbucket_cloud    = os.environ.get("BITBUCKET_CLOUD")
 bitbucket_username = os.environ.get("BITBUCKET_USERNAME")
 bitbucket_password = os.environ.get("BITBUCKET_PASSWORD")
 bitbucket_host     = os.environ.get("BITBUCKET_HOST")
@@ -26,7 +27,7 @@ stash_ssh_key_path = os.environ.get("STASH_SSH_KEY_PATH")
 
 class Migrate(bitbucket.BitBucket,stash.Stash):
     def __init__(self):
-        self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
+        self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password, bitbucket_cloud)
         self.stash = stash.Stash(stash_host, stash_username, stash_password)
         self.stashInformation = self.stash.gatherInformation()
         self.tools = tools.Tools()
