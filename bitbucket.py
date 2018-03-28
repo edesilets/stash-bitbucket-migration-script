@@ -98,8 +98,9 @@ class BitBucketCloud(BitBucketRequest):
         uri            = "projects/"+projectKey+"/permissions/"+properUserGroup
         queryParams    = "?permission="+properPermission+"&name="+name
         fullyFormedURI = uri + queryParams
-        response = self.bitBucketRequest.send("PUT", fullyFormedURI)
-        return response
+        # response = self.bitBucketRequest.send("PUT", fullyFormedURI)
+        # return response
+        return None
 
     def setRepositoryPermissions(self, projectKey, repository, user_or_group, name, permission):
         user_or_group = user_or_group.lower()
@@ -120,8 +121,9 @@ class BitBucketCloud(BitBucketRequest):
         queryParams    = "?name="+name+"&permission="+properPermission
         fullyFormedURI = uri + queryParams
 
-        response = self.bitBucketRequest.send("PUT", fullyFormedURI)
-        return response
+        # response = self.bitBucketRequest.send("PUT", fullyFormedURI)
+        # return response
+        return None
 
 class BitBucketServer(BitBucketRequest):
     def __init__(self, host, username, password):
