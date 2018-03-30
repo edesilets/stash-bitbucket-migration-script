@@ -46,7 +46,7 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
             getHost[0] = ssh_conf_name
             modify     = ":".join(getHost)
         else:
-        modify = url.replace(urlParsed.netloc, ssh_conf_name)
+            modify = url.replace(urlParsed.netloc, ssh_conf_name)
         return modify
 
     ##### Setup Process
