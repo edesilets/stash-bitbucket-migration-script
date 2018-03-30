@@ -77,7 +77,8 @@ class BitBucketCloud(BitBucketRequest):
             self.bitBucketRequest.setPayload("fork_policy", 'allow_forks')
         else:
             self.bitBucketRequest.setPayload("fork_policy", 'no_forks')
-        response = self.bitBucketRequest.send("POST", "repositories/"+self.teamUserName.lower()+"/"+ name.lower())
+        urlencodedName = name.lower().replace(" ", "-")
+        response = self.bitBucketRequest.send("POST", "repositories/"+self.teamUserName.lower()+"/"+ urlencodedName)
         return response
 
     def setProjectPermissions(self, projectKey, user_or_group, name, permission):
