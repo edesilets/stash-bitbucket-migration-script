@@ -5,6 +5,7 @@ import requests
 import json
 import base64
 import pprint
+import urllib
 import urllib3
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -42,6 +43,7 @@ class BitBucketRequest:
     def send(self, method, uri):
         encodedpayload = json.dumps(self.payload);
 
+        url = self.baseurl+uri
         # encode playload and headers and send request to server BB test....
         response = requests.request(method, self.baseurl+uri, data=encodedpayload, headers=self.headers, verify=False)
         self.clearPayload()
@@ -50,6 +52,9 @@ class BitBucketRequest:
             decoded = json.loads(response.text)
         else:
             decoded = response.text
+
+        if "error" in decoded:
+            raise ValueError("Received error from Bitbucket \n", url, encodedpayload, decoded)
         return decoded
 
 class BitBucketCloud(BitBucketRequest):
@@ -77,8 +82,10 @@ class BitBucketCloud(BitBucketRequest):
             self.bitBucketRequest.setPayload("fork_policy", 'allow_forks')
         else:
             self.bitBucketRequest.setPayload("fork_policy", 'no_forks')
-        urlencodedName = name.lower().replace(" ", "-")
-        response = self.bitBucketRequest.send("POST", "repositories/"+self.teamUserName.lower()+"/"+ urlencodedName)
+
+        slug = "repositories/"+self.teamUserName+"/"+ name
+        encoded = urllib.quote_plus(slug.lower()).replace("+","_")
+        response = self.bitBucketRequest.send("POST", encoded)
         return response
 
     def setProjectPermissions(self, projectKey, user_or_group, name, permission):
