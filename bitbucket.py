@@ -14,13 +14,17 @@ class BitBucketRequest:
     headers = dict()
     payload = dict()
 
-    def __init__(self, host, username, password):
+    def __init__(self, host, username, password, cloud=False):
+        self.cloud = cloud
         self.headers['Content-Type'] = "application/json"
         self.headers['Cache-Control'] = "no-cache"
-        self.createConnection(host, username, password);
+        self.createConnection(host, username, password)
 
     def setHost(self, host):
-        self.baseurl = "https://" + host + "/rest/api/1.0/"
+        if self.cloud:
+            self.baseurl = "https://" + host + "/2.0/"
+        else:
+            self.baseurl = "https://" + host + "/rest/api/1.0/"
 
     def setUser(self, username, password):
         self.headers['Authorization'] = "Basic " + base64.b64encode(username + ':' + password)
@@ -48,9 +52,83 @@ class BitBucketRequest:
             decoded = response.text
         return decoded
 
-class BitBucket(BitBucketRequest):
+class BitBucketCloud(BitBucketRequest):
     def __init__(self, host, username, password):
-        self.bitBucketRequest = BitBucketRequest(host, username, password)
+        self.bitBucketRequest = BitBucketRequest(host, username, password, True)
+        self.teamUserName = self.getTeam()['values'][0]['username']
+
+    def getTeam(self):
+        response = self.bitBucketRequest.send("GET", "teams?role=admin")
+        return response
+
+    def createProject(self, key, name, description):
+        self.bitBucketRequest.setPayload("key", key)
+        self.bitBucketRequest.setPayload("name", name)
+        self.bitBucketRequest.setPayload("description", description)
+        self.bitBucketRequest.setPayload("is_private", True)
+        response = self.bitBucketRequest.send("POST", "teams/"+self.teamUserName.lower()+"/projects/")
+        return response
+
+    def createProjectRepository(self, projectKey, name, forkable=True):
+        self.bitBucketRequest.setPayload("project", {"key": projectKey})
+        self.bitBucketRequest.setPayload("scm", "git")
+        self.bitBucketRequest.setPayload("is_private", True)
+        if forkable:
+            self.bitBucketRequest.setPayload("fork_policy", 'allow_forks')
+        else:
+            self.bitBucketRequest.setPayload("fork_policy", 'no_forks')
+        response = self.bitBucketRequest.send("POST", "repositories/"+self.teamUserName.lower()+"/"+ name.lower())
+        return response
+
+    def setProjectPermissions(self, projectKey, user_or_group, name, permission):
+        user_or_group = user_or_group.lower()
+        if user_or_group == "group" or user_or_group == "groups":
+            properUserGroup = "groups"
+        elif user_or_group == "user" or user_or_group == "users":
+            properUserGroup = "users"
+
+        permission = permission.lower()
+        if permission == "read":
+            properPermission = "PROJECT_READ"
+        elif permission == "write":
+            properPermission = "PROJECT_WRITE"
+        elif permission == "admin":
+            properPermission = "PROJECT_ADMIN"
+
+        uri            = "projects/"+projectKey+"/permissions/"+properUserGroup
+        queryParams    = "?permission="+properPermission+"&name="+name
+        fullyFormedURI = uri + queryParams
+        # response = self.bitBucketRequest.send("PUT", fullyFormedURI)
+        # return response
+        return None
+
+    def setRepositoryPermissions(self, projectKey, repository, user_or_group, name, permission):
+        user_or_group = user_or_group.lower()
+        if user_or_group == "group" or user_or_group == "groups":
+            properUserGroup = "groups"
+        elif user_or_group == "user" or user_or_group == "users":
+            properUserGroup = "users"
+
+        permission = permission.lower()
+        if permission == "read":
+            properPermission = "REPO_READ"
+        elif permission == "write":
+            properPermission = "REPO_WRITE"
+        elif permission == "admin":
+            properPermission = "REPO_ADMIN"
+
+        uri            = "projects/"+projectKey+"/repos/"+repository+"/permissions/"+properUserGroup
+        queryParams    = "?name="+name+"&permission="+properPermission
+        fullyFormedURI = uri + queryParams
+
+        # response = self.bitBucketRequest.send("PUT", fullyFormedURI)
+        # return response
+        return None
+
+class BitBucketServer(BitBucketRequest):
+    def __init__(self, host, username, password):
+        self.bitBucketRequest = BitBucketRequest(host, username, password, False)
+        pprint.pprint(self.bitBucketRequest)
 
     def createProject(self, key, name, description):
         self.bitBucketRequest.setPayload("key", key)
@@ -108,3 +186,10 @@ class BitBucket(BitBucketRequest):
 
         response = self.bitBucketRequest.send("PUT", fullyFormedURI)
         return response
+
+class BitBucket(BitBucketServer, BitBucketCloud):
+    def __init__(self, host, username, password, cloud=False):
+        if cloud:
+            self.bitbucket = BitBucketCloud(host, username, password)
+        else:
+            self.bitbucket =  BitBucketServer(host, username, password)

@@ -9,6 +9,7 @@ from urlparse import urlparse
 from git import Repo
 from git import Git
 
+bitbucket_cloud    = os.environ.get("BITBUCKET_CLOUD")
 bitbucket_username = os.environ.get("BITBUCKET_USERNAME")
 bitbucket_password = os.environ.get("BITBUCKET_PASSWORD")
 bitbucket_host     = os.environ.get("BITBUCKET_HOST")
@@ -26,7 +27,7 @@ stash_ssh_key_path = os.environ.get("STASH_SSH_KEY_PATH")
 
 class Migrate(bitbucket.BitBucket,stash.Stash):
     def __init__(self):
-        self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password)
+        self.bb = bitbucket.BitBucket(bitbucket_host, bitbucket_username, bitbucket_password, bitbucket_cloud).bitbucket
         self.stash = stash.Stash(stash_host, stash_username, stash_password)
         self.stashInformation = self.stash.gatherInformation()
         self.tools = tools.Tools()
@@ -40,6 +41,11 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
     def gitUrlParse(self, url, ssh_conf_name):
         # TODO: rename variables to make sense.
         urlParsed = urlparse(url)
+        if urlParsed.netloc == '':
+            getHost    = url.split(":")
+            getHost[0] = ssh_conf_name
+            modify     = ":".join(getHost)
+        else:
         modify = url.replace(urlParsed.netloc, ssh_conf_name)
         return modify
 
@@ -87,9 +93,9 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
                 pprint.pprint("Pushing Tags to BitBucket COMPLETE")
 
                 # NOTE: refspec=":HEAD" Deletes the HEAD branch that is created on the new remote AKA: bitbucket
-                pprint.pprint("Delete HEAD bransh on BitBucket")
+                pprint.pprint("Delete HEAD branch on BitBucket")
                 Repo(git_folder_path).remote(name='bitbucket').push(refspec=":HEAD")
-                pprint.pprint("Delete HEAD bransh on BitBucket COMPLETE!")
+                pprint.pprint("Delete HEAD branch on BitBucket COMPLETE!")
             print "Pushing to BitBucket completed"
 
     def setupRepositoryDirectory(self, project_name, repository_name):
