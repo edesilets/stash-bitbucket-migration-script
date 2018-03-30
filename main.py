@@ -33,8 +33,6 @@ for project_key, project in stashInformation.iteritems():
         repository_time_end = time.time()
         print("--- Repository Migration took %s seconds ---" % (repository_time_end - repository_time_start))
         print "########### Moving to next REPOSITORY! ###########\n\n"
-        break
     project_time_end = time.time()
     print("--- Project Migration took %s seconds ---" % (project_time_end - project_time_start))
     print "########### Completed Export of Project "+project['name']+" ###########"
-    break
