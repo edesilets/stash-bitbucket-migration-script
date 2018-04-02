@@ -81,6 +81,17 @@ class Migrate(bitbucket.BitBucket,stash.Stash):
             cleanURL = self.gitUrlParse(git_remote_url, bitbucket_ssh_config_hostname)
             Repo(git_folder_path).create_remote('bitbucket', url=cleanURL)
 
+            try:
+                self.runGitCommands(cleanURL, git_folder_path)
+            except:
+                pprint.pprint("Failed to push to bitbucket repository might be empty.")
+                print "Git remote URL: "
+                pprint.pprint(git_remote_url)
+                print "Local storage: "
+                pprint.pprint(git_folder_path)
+                pass
+
+    def runGitCommands (self, cleanURL, git_folder_path):
             pprint.pprint("Bitbucket Git URL: "+cleanURL)
             git_ssh_cmd = self.gitSSHCommand(bitbucket_ssh_key_path)
             with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
